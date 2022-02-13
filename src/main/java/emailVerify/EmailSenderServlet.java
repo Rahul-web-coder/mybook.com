@@ -22,27 +22,50 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
 
 import userBean.User;
+
+
+
 
 @WebServlet("/emailCheck")
 public class EmailSenderServlet extends HttpServlet {
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		HttpSession session = req.getSession(false);
+		String email = (String) session.getAttribute("email");
+		sendOTP(req, resp, email);
+	}
 	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		
+		
+		PasswordEncoder encode = new PasswordEncoder();
 		String username= req.getParameter("username");
 		String email = req.getParameter("email");
 		String contact = req.getParameter("contact");
 		String address = req.getParameter("address");
 		String password = req.getParameter("password");
+		String encryptedPassword = encode.Encoder(password);
+		
 		HttpSession session = req.getSession();
 		session.setAttribute("username", username);
 		session.setAttribute("email", email);
 		session.setAttribute("contact", contact);
 		session.setAttribute("address", address);
-		session.setAttribute("password", password);
+		session.setAttribute("password", encryptedPassword);
+		
+		
+		sendOTP(req, resp, email);
+	}	
+	
+	public static void sendOTP(HttpServletRequest req, HttpServletResponse resp, String email) throws ServletException, IOException
+	{
+		HttpSession session = req.getSession(false);
 		int t=0;
 		User u =new User();
 		try {
@@ -52,39 +75,47 @@ public class EmailSenderServlet extends HttpServlet {
 				int otp = rand.nextInt(900000) + 100000;
 				session.setAttribute("otp",otp);
 				String mes = "Your OTP is "+otp;
+				final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
 				try
 				{
-					String to=email;//change accordingly
+				   	String to=email;//change accordingly
 					//Get the session object
-					Properties props = new Properties();
-					props.put("mail.smtp.host", "smtp.gmail.com");
-					props.put("mail.smtp.socketFactory.port", "465");
-					props.put("mail.smtp.socketFactory.class",
-					"javax.net.ssl.SSLSocketFactory");
-					props.put("mail.smtp.auth", "true");
-					props.put("mail.smtp.port", "465");
+				   	Properties props = System.getProperties();
+				     props.setProperty("mail.smtp.host", "smtp.gmail.com");
+				     props.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
+				     props.setProperty("mail.smtp.socketFactory.fallback", "false");
+				     props.setProperty("mail.smtp.port", "465");
+				     props.setProperty("mail.smtp.socketFactory.port", "465");
+				     props.put("mail.smtp.auth", "true");
+				     props.put("mail.debug", "true");
+				     props.put("mail.store.protocol", "pop3");
+				     props.put("mail.transport.protocol", "smtp");
+				     
 					Session ses = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
-					protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication("mahatorahul4400@gmail.com","Rahul@123");//Put your email id and password here
-					}
+						protected PasswordAuthentication getPasswordAuthentication() {
+							return new PasswordAuthentication("ahmedsiddiqui4799@gmail.com","77@firdaus77");//Put your email id and password here
+						}
 					});
 					//compose message
 					try {
-					MimeMessage message = new MimeMessage(ses);
-					message.setFrom(new InternetAddress("mahatorahul4400@gmail.com"));//change accordingly
-					message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
-					message.setSubject("Nice to meet u");
-					message.setText(mes);
-					//send message
-					Transport.send(message);
-					System.out.println("message sent successfully");
-					resp.sendRedirect("otp.jsp");
-					} catch (MessagingException e) {throw new RuntimeException(e);}
+						MimeMessage message = new MimeMessage(ses);
+						message.setFrom(new InternetAddress("ahmedsiddiqui4799@gmail.com"));//change accordingly
+						message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+						message.setSubject("Nice to meet u");
+						message.setText(mes);
+						//send message
+						Transport.send(message);
+						System.out.println("message sent successfully");
+						resp.sendRedirect("otp.jsp");
+					} 
+					catch (MessagingException e) {
+						throw new RuntimeException(e);
+					}
 
 				}
 				catch (IOException e)
 				{
-				e.printStackTrace();
+					e.printStackTrace();
 				}
 				
 			}
@@ -98,6 +129,5 @@ public class EmailSenderServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-	}	
+	}
 }

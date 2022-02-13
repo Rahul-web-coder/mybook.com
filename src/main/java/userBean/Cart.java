@@ -138,6 +138,7 @@ public class Cart {
 		return row;
 	}
 	
+	
 	public ArrayList<Cart> getAllProductsFromCartByEmail() throws SQLException
 	{
 		Connection conn = DBConnection.dbconnect();
@@ -252,6 +253,53 @@ public class Cart {
 		conn.close();
 		return updateduplicateprod;
 	}
+	
+	public int DeleteBuyProductFromCart(String Email) throws SQLException {
+		
+		Connection conn = DBConnection.dbconnect();
+		String sql = "delete from cart where userEmail=?";
+		java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+		ps.setString(1, Email);
+		
+		
+		int row = ps.executeUpdate();
+		conn.close();
+		return row;
+	}
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	/*
+	public ArrayList<Cart> getAllProductsFromCartByEmail2() throws SQLException
+	{
+		Connection conn = DBConnection.dbconnect();
+		String sql = "select *from cart where userEmail=?";
+		java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+		ps.setString(1, userEmail);
+		ResultSet rs = ps.executeQuery();
+		ArrayList<Cart> crt = new ArrayList<Cart>();
+		
+		while(rs.next())
+		{
+			int id=rs.getInt("pId");
+			String name=rs.getString("pName");
+			String author=rs.getString("pAuthor");
+			String description=rs.getString("pDescription");
+			String seller=rs.getString("pSeller");
+			int price=rs.getInt("pPrice");
+			int discount=rs.getInt("pDiscount");
+			String image=rs.getString("pImage");
+			int category=rs.getInt("pCategoryId");
+			int pqty= rs.getInt("pqty");
+			String user=rs.getString("userEmail");
+			Cart c5=new Cart(id,name,author,description,seller,price,discount,image,category,pqty,user);
+			crt.add(c5);
+		}
+		
+		
+		return crt;
+	}
+	*/
 	
 	
 }

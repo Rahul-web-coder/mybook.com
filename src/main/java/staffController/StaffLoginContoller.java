@@ -29,7 +29,7 @@ public class StaffLoginContoller extends HttpServlet {
 			System.out.println(s);
 			if(s==1) 
 			{
-				 rd = req.getRequestDispatcher("staffSignIn.jsp");
+				 rd = req.getRequestDispatcher("staff/staffSignIn.jsp");
 				req.setAttribute("msg", "Account not activated!!");
 				
 			}

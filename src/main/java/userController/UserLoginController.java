@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import adminBean.admin;
+import emailVerify.PasswordEncoder;
 import userBean.User;
 
 @WebServlet("/userlogin")
@@ -22,11 +23,11 @@ public class UserLoginController extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String e = req.getParameter("Email");
 		String p = req.getParameter("Password");
-		
-		
+		PasswordEncoder encode = new PasswordEncoder();
+		String encryptedPasswordsignin = encode.Encoder(p);
 		User ad = new User();
 		ad.setEmail(e);
-		ad.setPassword(p);
+		ad.setPassword(encryptedPasswordsignin);
 		
 		RequestDispatcher rd;
 		int s;
@@ -51,10 +52,11 @@ public class UserLoginController extends HttpServlet {
 
 			rd.forward(req, resp);
 			
+			
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
 	}
-	}
+}

@@ -13,6 +13,9 @@ import javax.servlet.http.HttpSession;
 
 import userBean.Cart;
 import userBean.Product;
+
+import userBean.Cart;
+import userBean.Product;
 @WebServlet(urlPatterns = "/addtocart")
 public class AddToCartServlet extends HttpServlet {
 
@@ -35,10 +38,13 @@ public class AddToCartServlet extends HttpServlet {
 					String pAuthor=p2.getpAuthor();
 					String pDesc=p2.getpDescription();
 					String pSeller=p2.getpSeller();
-					int price=p2.getpPrice();
-					int pDisc=p2.getpId();
+					int pDisc=p2.getpDiscount();
+					int price=p2.getpPrice() -( p2.getpPrice() * p2.getpDiscount())/100;
 					String pimage=p2.getpImage();
 					int pcat=p2.getpCategoryId();
+					
+					
+					
 					Cart cart = new Cart();
 					cart.setpName(pname);
 					cart.setpAuthor(pAuthor);

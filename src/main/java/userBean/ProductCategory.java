@@ -1,6 +1,7 @@
 package userBean;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,6 +31,37 @@ public class ProductCategory {
 	public void setpCategoryDesc(String pCategoryDesc) {
 		this.pCategoryDesc = pCategoryDesc;
 	}
+	
+	
+	
+	
+	
+	public int addCategory() throws SQLException{
+		
+		//sql connection
+		Connection conn = DBConnection.dbconnect();	
+		
+		//SQL Queries
+		String sql = "insert into product_category (pCategoryName,pCategoryDesc) values(?,?)";
+		
+		//Statement (Set Data) & Execute
+		PreparedStatement ps = conn.prepareStatement(sql);
+		
+		//filling data in database/sql
+		//ps.setInt(1, categoryId);
+		ps.setString(1,pCategoryName);
+		ps.setString(2,pCategoryDesc);
+		
+		
+		int row = ps.executeUpdate();
+				
+		//close connection
+				
+		conn.close();
+		return row;
+	}
+	
+	
 	
 	public ArrayList<ProductCategory> getAllProductCategoryId() throws SQLException
 	{
@@ -82,7 +114,40 @@ public class ProductCategory {
 		}
 		return productcategory;
 	}
+	public ArrayList<ProductCategory> getAllProductCategoryID() throws SQLException
+	{
+		Connection conn = DBConnection.dbconnect();
+		String sql = "Select * from product_category";
+		java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+		ArrayList<ProductCategory> productId = new ArrayList<ProductCategory>();
+		while(rs.next())
+		{
+			ProductCategory pdcat = new ProductCategory();
+			pdcat.setpCategoryId(rs.getInt("pCategoryId"));
+			pdcat.setpCategoryName(rs.getString("pCategoryName"));
+			productId.add(pdcat);
+		}
+		
+		return productId;
+	}
 	
+	
+	
+	
+	public int totalBookCategory() throws SQLException{
+		Connection conn = DBConnection.dbconnect();
+		String sql = "select count(*) as bookcategory from product_category";
+		java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+		int count=0;
+		if(rs.next()) {
+			count=rs.getInt("bookcategory");
+		}
+		conn.close();
+		return count;
+		
+	}
 	
 	
 	

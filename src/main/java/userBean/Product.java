@@ -1,6 +1,7 @@
 package userBean;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -102,6 +103,36 @@ public class Product {
 		this.pCategoryId = pCategoryId;
 		this.pqty = pqty;
 	}
+	
+	
+	
+	
+	//getting email from the database for editing users data according to email & putting the fetched data from database of a particular user in edit form
+		public int addBook() throws SQLException{
+			
+			//sql connection
+			Connection conn = DBConnection.dbconnect();
+			
+			//SQL Query
+			String sql = "insert into product (pName,pAuthor,pDescription,pSeller,pPrice,pDiscount,pImage,pQty,pCategoryId) values (?,?,?,?,?,?,?,?,?) ";
+			
+			//Statement (Set Data) & Execute
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, pName);
+			ps.setString(2,pAuthor);
+			ps.setString(3,pDescription);
+			ps.setString(4,pSeller);
+			ps.setInt(5,pPrice);
+			ps.setInt(6,pDiscount);
+			ps.setString(7,pImage);
+			ps.setInt(8,pqty);
+			ps.setInt(9,pCategoryId);
+			
+			int row = ps.executeUpdate();
+			conn.close();
+			return row;	
+		}
+	
 	public ArrayList<Product> getAllProductsFromDB() throws SQLException
 	{
 		Connection conn = DBConnection.dbconnect();
@@ -121,6 +152,7 @@ public class Product {
 			s1.setpDiscount(rs.getInt("pDiscount"));
 			s1.setpImage(rs.getString("pImage"));
 			s1.setpCategoryId(rs.getInt("pCategoryId"));
+			s1.setPqty(rs.getInt("pQty"));
 			allStuds1.add(s1);
 
 			
@@ -129,6 +161,8 @@ public class Product {
 		
 		return allStuds1;
 	}
+
+	
 	
 	public Product getAllProductsFromDB(int pid) throws SQLException
 	{
@@ -153,8 +187,24 @@ public class Product {
 			p5=new Product(id,name,author,description,seller,price,discount,image,category,pqty);
 			
 		}
-		
-		
+
 		return p5;
+	}
+	
+	
+	
+	
+	public int totalBooks() throws SQLException{
+		Connection conn = DBConnection.dbconnect();
+		String sql = "select count(*) as book from product";
+		java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+		int count=0;
+		if(rs.next()) {
+			count=rs.getInt("book");
+		}
+		conn.close();
+		return count;
+		
 	}
 }

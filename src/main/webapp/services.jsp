@@ -114,13 +114,7 @@ Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt</p>
 		</div>
 		</section>
 				
-				<!-------------------- footer ------------------->
-				
-		
-		<%@ 
-			include file="footer.jsp" 
-		%>
-
+				<!-------------------- footer ---------------->
 </main>
 
 </body>

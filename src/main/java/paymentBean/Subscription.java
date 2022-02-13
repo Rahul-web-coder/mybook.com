@@ -10,7 +10,7 @@ public class Subscription
 {
 	private int paymentid,amount;
 
-	private String transactionid,mobileno;
+	private String transactionid,email;
 	private String status;
 	public int getAmount() {
 		return amount;
@@ -37,12 +37,13 @@ public class Subscription
 		this.transactionid = transactionid;
 	}
 
-	public String getMobileno() {
-		return mobileno;
+	
+	public String getEmail() {
+		return email;
 	}
 
-	public void setMobileno(String mobileno) {
-		this.mobileno = mobileno;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getStatus() {
@@ -55,9 +56,9 @@ public class Subscription
 
 	public int addpayment() throws SQLException{
 		Connection conn = DBConnection.dbconnect();
-		String sql="insert into subscription(mobileno,amount,status) values(?,?,?)";
+		String sql="insert into subscription(userEmail,amount,status) values(?,?,?)";
 		java.sql.PreparedStatement ps = conn.prepareStatement(sql);
-		ps.setString(1, mobileno);
+		ps.setString(1, email);
 		ps.setInt(2, amount);
 		ps.setString(3, "Pending");
 		int row = ps.executeUpdate();
@@ -65,13 +66,13 @@ public class Subscription
 		return row;
 	}
 	
-	public int updatepayment(String transactionid,String mobileno) throws SQLException{
+	public int updatepayment(String transactionid,String email) throws SQLException{
 		Connection conn = DBConnection.dbconnect();
-		String sql="update subscription set transactionid=?, status=? where mobileno=?";
+		String sql="update subscription set transactionid=?, status=? where userEmail=?";
 		java.sql.PreparedStatement ps = conn.prepareStatement(sql);
 		ps.setString(1, transactionid);
 		ps.setString(2, "Completed");
-		ps.setString(3, mobileno);
+		ps.setString(3, email);
 		int row = ps.executeUpdate();
 		conn.close();
 		return row;

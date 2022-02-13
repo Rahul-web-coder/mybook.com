@@ -10,6 +10,7 @@ import util.DBConnection;
 public class admin {
 	private String email;
 	private String password;
+	private String Status;
 	public String getEmail() {
 		return email;
 	}
@@ -22,7 +23,12 @@ public class admin {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+	public String getStatus() {
+		return Status;
+	}
+	public void setStatus(String status) {
+		Status = status;
+	}
 	//login if data is present in database
 	public admin adminLogin() throws SQLException{
 		
@@ -46,8 +52,8 @@ public class admin {
 			String e = rs.getString("adminEmail");
 			String n = rs.getString("adminPassword");
 			
-			ad.setEmail(n);
-			ad.setPassword(e);
+			ad.setEmail(e);
+			ad.setPassword(n);
 			
 		}
 		else {
@@ -58,4 +64,47 @@ public class admin {
 	}
 	
 
+	public static int delete(int id){  
+        int status=0;  
+        try{  
+        	Connection conn =  DBConnection.dbconnect();  
+            PreparedStatement ps=conn.prepareStatement("delete from product where pId=?");  
+            ps.setInt(1,id);  
+            status=ps.executeUpdate();  
+              
+            conn.close();  
+        }catch(Exception e){e.printStackTrace();}  
+         
+        return status;
+    }  
+	
+	public static int deletebookcategory(int id){  
+        int status=0;  
+        try{  
+        	Connection conn =  DBConnection.dbconnect();  
+            PreparedStatement ps=conn.prepareStatement("delete from product_category where pCategoryId=?");  
+            ps.setInt(1,id);  
+            status=ps.executeUpdate();  
+              
+            conn.close();  
+        }catch(Exception e){e.printStackTrace();}  
+          
+        return status;  
+    }  
+	
+	public int updatebookstatus(int id){  
+        int stat=0;  
+        try{  
+        	Connection conn =  DBConnection.dbconnect();  
+            PreparedStatement ps=conn.prepareStatement("update my_orders set status=? where orderId=?");  
+            ps.setString(1, getStatus());
+            ps.setInt(2,id);  
+            stat=ps.executeUpdate();  
+              
+            conn.close();  
+        }catch(Exception e){e.printStackTrace();}  
+          
+        return stat;  
+    }
+	
 }

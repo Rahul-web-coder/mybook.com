@@ -119,6 +119,7 @@ public class User {
 		conn.close();
 		return row;
 	}
+	
 	public int check_duplicate_user(String email1) throws SQLException{
 		
 		Connection conn = DBConnection.dbconnect();
@@ -139,24 +140,91 @@ public class User {
 		
 	}
 	
-	public ArrayList<String> getAllProductCategory() throws SQLException
-	{
+	//getting email from the database for editing users data according to email & putting the fetched data from database of a particular user in edit form
+	public User getDetailsByEmail() throws SQLException{
+		
+		//sql connection
 		Connection conn = DBConnection.dbconnect();
-		String sql = "Select *from product_category";
-		java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+		
+		//SQL Query
+		String sql = "select *from user where userEmail = ? ";
+		
+		//Statement (Set Data) & Execute
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ps.setString(1, email);
+		
+		
+		
+		//t is a container its work is to get all the data from table(users) from database. it is used when select command is used
 		ResultSet rs = ps.executeQuery();
-		ArrayList<String> productcategory = new ArrayList<String>();
-		while(rs.next())
-		{
-			String n = rs.getString("pCategoryName");
-			productcategory.add(n);
+		
+		User u1 = new User();
+		if(rs.next()) {
+			
+			String e1 = rs.getString("userEmail");
+			String n = rs.getString("userName");
+			String add = rs.getString("userAddress");
+			String contact = rs.getString("userContact");
+			
+			
+			u1.setUsername(n);
+			u1.setEmail(e1);
+			u1.setAddress(add);
+			u1.setContact(contact);
+			//u1.setPassword(rs.getString("userPassword"));
+			
+			
 		}
-		return productcategory;
+		else {
+			u1=null;
+		}
+		return u1;	
+		
 	}
 	
 	
+
+public ArrayList<User> getAllUsers() throws SQLException
+{
+	Connection conn = DBConnection.dbconnect();
+	String sql = "select *from user ORDER BY userId DESC";
+	java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+	ResultSet rs = ps.executeQuery();
+	ArrayList<User> allUsers = new ArrayList<User>();
+	while(rs.next())
+	{	
+		//u1.setPassword(rs.getString("userPassword"));
+		
+		User u1 = new User();
+		u1.setEid(rs.getString("userId"));
+		u1.setEmail(rs.getString("userEmail"));
+		u1.setUsername(rs.getString("userName"));
+		u1.setAddress(rs.getString("userAddress"));
+		u1.setContact(rs.getString("userContact"));
+	
+		allUsers.add(u1);
+
+		
+	}
 	
 	
+	return allUsers;
+}
+
+
+public int totalUsers() throws SQLException{
+	Connection conn = DBConnection.dbconnect();
+	String sql = "select count(*) as totalUser from user";
+	java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+	ResultSet rs = ps.executeQuery();
+	int count=0;
+	if(rs.next()) {
+		count=rs.getInt("totalUser");
+	}
+	conn.close();
+	return count;
+	
+}
 	
 
 }

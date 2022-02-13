@@ -80,7 +80,7 @@ public class UserRegisterController extends HttpServlet {
 			
 			session.invalidate();
 			req.setAttribute("mseg", "Otp not matched");
-			RequestDispatcher rd = req.getRequestDispatcher("signUp.jsp");
+			RequestDispatcher rd = req.getRequestDispatcher("otp.jsp");
 			rd.forward(req, resp);
 		}
 		

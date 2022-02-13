@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet(urlPatterns = "/subscription")
 public class PaymentController extends HttpServlet {
@@ -16,12 +17,14 @@ public class PaymentController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		PrintWriter out = resp.getWriter();
+		HttpSession session = req.getSession(false);
+		String Email=(String)session.getAttribute("m");
 		if(req.getParameter("transactionid")==null) {
 			
-			String mobileno = req.getParameter("mobileno");
+			String email = Email;
 			int amount = Integer.parseInt(req.getParameter("amount"));
 			Subscription s =new Subscription();
-			s.setMobileno(mobileno);
+			s.setEmail(email);
 			s.setAmount(amount);
 			try {
 				int res=s.addpayment();
@@ -39,13 +42,13 @@ public class PaymentController extends HttpServlet {
 		
 		else {
 			
-			String mobileno = req.getParameter("mobileno");
+			String email =Email;
 			String transactionid = req.getParameter("transactionid");
 			Subscription s =new Subscription();
-			s.setMobileno(mobileno);
+			s.setEmail(email);
 			s.setTransactionid(transactionid);
 			try {
-				int res=s.updatepayment(transactionid, mobileno);
+				int res=s.updatepayment(transactionid, email);
 				if(res==1) {
 					out.print("data updated in Database ");
 				}

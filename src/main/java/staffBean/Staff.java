@@ -101,8 +101,12 @@ public class Staff {
 			s1.setContact(rs.getString("staffContact"));
 			s1.setAddress(rs.getString("staffAddress"));
 			s1.setPassword(rs.getString("staffPassword"));
+			if(rs.getInt("status")==0)
+			{
+				result=1;
+			}
 			s1.setStatus(rs.getInt("status"));
-			result=1;
+		
 			
 		}
 		else
